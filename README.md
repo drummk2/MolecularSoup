@@ -37,6 +37,7 @@ Long-term ambitions include:
 | **v0.3** ✅ | Energy system   | Introduce energy absorption and release for reactions. |
 | **v0.4** ✅ | Replication     | Allow molecules to replicate under certain conditions. |
 | **v0.5** ✅ | Autocatalysis   | Model self-sustaining reaction networks. |
+| **v0.6** | TBD   | TBD |
 
 ## 🧬 Glossary of AChem & Chemistry Terms
 This section explains key terms from artificial chemistry (AChem) and chemistry as used in this project:
