@@ -89,11 +89,12 @@ export class Simulation {
                     const distSq = dx * dx + dy * dy;
 
                     if (distSq < radiusSq) {
+                        /* Attempt reaction between molecules, including energy transfer. */
                         const reactionResult = this.molecules[idx1].react(this.molecules[idx2]);
                         if (reactionResult) {
                             this.molecules[idx1] = reactionResult;
 
-                            /* Get a ring from pool or create new. */
+                            /* Visualise reaction with a ring. */
                             let ring = this.ringPool.find((r) => !r.active);
                             if (!ring) {
                                 ring = {
@@ -113,11 +114,30 @@ export class Simulation {
                             ring.active = true;
                             this.reactionRings.push(ring);
 
-                            /* Remove the second particle/molecule. */
+                            /* Remove the second particle/molecule after reaction. */
                             this.particles.splice(idx2, 1);
                             this.molecules.splice(idx2, 1);
                             indices.splice(j, 1);
                             j--;
+                        } else {
+                            /* No reaction: exchange a small amount of energy. */
+                            const m1 = this.molecules[idx1];
+                            const m2 = this.molecules[idx2];
+
+                            /* Amount of energy to transfer (randomly up to 2 units). */
+                            const transfer = Math.min(m1.energy, Math.random() * 2);
+                            m1.energy -= transfer;
+                            m2.energy += transfer;
+
+                            /* Simple elastic collision: swap velocities to prevent passing through. */
+                            const p1 = this.particles[idx1];
+                            const p2 = this.particles[idx2];
+                            const tempVx = p1.vx;
+                            const tempVy = p1.vy;
+                            p1.vx = p2.vx;
+                            p1.vy = p2.vy;
+                            p2.vx = tempVx;
+                            p2.vy = tempVy;
                         }
                     }
                 }

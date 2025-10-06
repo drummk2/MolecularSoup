@@ -33,7 +33,7 @@ Long-term ambitions include:
 |----------|-----------------|-------------|
 | **v0.1** ✅ | Basic motion    | Molecules move randomly and bounce within a 2D space. |
 | **v0.2** ✅ | Reactions       | Implement symbolic reaction rules (e.g., A + B → AB). |
-| **v0.3** | Energy system   | Introduce energy absorption and release for reactions. |
+| **v0.3** ✅ | Energy system   | Introduce energy absorption and release for reactions. |
 | **v0.4** | Replication     | Allow molecules to replicate under certain conditions. |
 | **v0.5** | Autocatalysis   | Model self-sustaining reaction networks. |
 | **v1.0** | Visualisation UI| Add interactive controls and advanced analysis tools. |
