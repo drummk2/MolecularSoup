@@ -1,4 +1,4 @@
-# 🧪 MolecularSoup: A Minimal Artificial Chemistry Simulator
+# 🧪 MolecularSoup
 
 **MolecularSoup** is a browser-based simulation written in **TypeScript** that explores the fundamentals of **artificial chemistry (AChem)** — a field concerned with how life-like and self-organising behaviors can emerge from simple, rule-based interactions.
 
