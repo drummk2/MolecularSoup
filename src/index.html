@@ -3,22 +3,35 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Molecular Soup — v0.1</title>
-        <script type="module" src="./scripts/main.ts"></script>
+        <title>Molecular Soup — v0.2</title>
         <link rel="stylesheet" href="./styles/index.css" />
+        <script type="module" src="./scripts/main.ts"></script>
+        <script type="module">
+            /* Adjust canvas size dynamically on window resize. */
+            const canvas = document.getElementById('canvas');
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+        </script>
     </head>
     <body>
         <div id="ui">
-            <h1>Molecular Soup — v0.1</h1>
+            <h1>Molecular Soup — v0.2</h1>
             <div class="controls">
-                <label
-                    >Particles:
+                <label>
+                    Particles:
                     <input id="count" type="number" min="2" max="500" value="80" />
                 </label>
                 <button id="startPause">Start</button>
                 <button id="reset">Reset</button>
             </div>
-            <p class="hint">Particles bounce off of walls and each other.</p>
+            <p class="hint">
+                Particles bounce off of walls and each other. Reactions occur when molecules
+                collide.
+            </p>
         </div>
 
         <canvas id="canvas"></canvas>

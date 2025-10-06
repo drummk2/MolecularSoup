@@ -25,7 +25,7 @@ Long-term ambitions include:
 ## 🌐 Technologies
 - **TypeScript** — core language.
 - **Vite** — development bundler and dev server.
-- **HTML5 Canvas** — real-time visualization.
+- **HTML5 Canvas** — real-time visualisation.
 
 ## 🚀 Roadmap
 
@@ -36,4 +36,4 @@ Long-term ambitions include:
 | **v0.3** | Energy system   | Introduce energy absorption and release for reactions. |
 | **v0.4** | Replication     | Allow molecules to replicate under certain conditions. |
 | **v0.5** | Autocatalysis   | Model self-sustaining reaction networks. |
-| **v1.0** | Visualization UI| Add interactive controls and advanced analysis tools. |
+| **v1.0** | Visualisation UI| Add interactive controls and advanced analysis tools. |

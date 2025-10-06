@@ -2,49 +2,70 @@ import { Simulation } from './simulation';
 import { Particle } from './particle';
 import { Molecule } from './molecule';
 
-/** Get the canvas element from the DOM. */
+/* Get the canvas element from the DOM. */
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
-/** Get the 2D rendering context of the canvas. */
+/* Get the 2D rendering context of the canvas. */
 const ctx = canvas.getContext('2d')!;
 
-/** Set canvas width and height to fill the window. */
+/* Set canvas width and height to fill the window. */
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-/** Create a new simulation instance. */
+/* Create a new simulation instance. */
 const sim = new Simulation(ctx, canvas.width, canvas.height);
 
-/** Initialize particles and molecules. */
-for (let i = 0; i < 50; i++) {
-    /** Random x-coordinate. */
-    const x = Math.random() * canvas.width;
+/* Function to initialise particles and molecules. */
+function initParticles(count: number) {
+    sim.particles = [];
+    sim.molecules = [];
+    for (let i = 0; i < count; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const vx = (Math.random() - 0.5) * 2;
+        const vy = (Math.random() - 0.5) * 2;
 
-    /** Random y-coordinate. */
-    const y = Math.random() * canvas.height;
+        const p = new Particle(x, y, vx, vy);
+        const m = Molecule.randomType();
 
-    /** Random horizontal velocity. */
-    const vx = (Math.random() - 0.5) * 2;
-
-    /** Random vertical velocity. */
-    const vy = (Math.random() - 0.5) * 2;
-
-    /** Create a new particle with position and velocity. */
-    const p = new Particle(x, y, vx, vy);
-
-    /** Create a random molecule from the palette. */
-    const m = Molecule.randomType();
-
-    /** Add the particle and molecule to the simulation. */
-    sim.addParticle(p, m);
+        sim.addParticle(p, m);
+    }
 }
 
-/** Animation loop: update and draw the simulation each frame. */
+/* Read particle count from input. */
+const countInput = document.getElementById('count') as HTMLInputElement;
+initParticles(parseInt(countInput.value));
+
+/* Animation loop: update and draw the simulation each frame. */
+let animationId: number;
 function animate() {
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
     sim.update();
     sim.draw();
 }
 
-/** Start the animation loop. */
-animate();
+/* Start/Pause button from DOM. */
+const startBtn = document.getElementById('startPause') as HTMLButtonElement;
+
+/* Toggle simulation on button click. */
+let running = false;
+startBtn.addEventListener('click', () => {
+    if (!running) {
+        animate();
+        startBtn.textContent = 'Pause';
+    } else {
+        cancelAnimationFrame(animationId);
+        startBtn.textContent = 'Start';
+    }
+    running = !running;
+});
+
+/* Reset button from DOM. */
+const resetBtn = document.getElementById('reset') as HTMLButtonElement;
+resetBtn.addEventListener('click', () => {
+    cancelAnimationFrame(animationId);
+    running = false;
+    startBtn.textContent = 'Start';
+    initParticles(parseInt(countInput.value));
+    sim.draw();
+});

@@ -1,28 +1,45 @@
-/** Represents a molecule in the simulation with a symbolic structure and color. */
+/* Represents a molecule in the simulation with a symbolic structure and color. */
 export class Molecule {
-    /** Symbolic structure of the molecule, e.g., "A", "B", "AB". */
+    /* Symbolic structure of the molecule, e.g., "A", "B", "AB". */
     structure: string;
 
-    /** Display color of the molecule. */
+    /* Display color of the molecule. */
     color: string;
 
-    /** Initialize the molecule with a structure and color. */
+    /* Initialise the molecule with a structure and color. */
     constructor(structure: string, color: string) {
         this.structure = structure;
         this.color = color;
     }
 
-    /** Predefined color palette for molecule types. */
+    /* Predefined color palette for molecule types. */
     static palette: Record<string, string> = {
         A: '#e63946',
         B: '#457b9d',
         C: '#2a9d8f',
+        AB: '#f4a261',
+        BC: '#e9c46a',
     };
 
-    /** Generate a random molecule from the palette. */
+    /* Generate a random molecule from the palette. */
     static randomType(): Molecule {
         const types = Object.keys(Molecule.palette);
         const t = types[Math.floor(Math.random() * types.length)];
         return new Molecule(t, Molecule.palette[t]);
+    }
+
+    /* Reaction rules for molecule collisions. */
+    static reactions: Record<string, Record<string, string>> = {
+        A: { B: 'AB' },
+        B: { C: 'BC' },
+    };
+
+    /* Check if this molecule reacts with another and return the resulting molecule. */
+    react(other: Molecule): Molecule | null {
+        const resultType = Molecule.reactions[this.structure]?.[other.structure];
+        if (resultType) {
+            return new Molecule(resultType, Molecule.palette[resultType]);
+        }
+        return null;
     }
 }
