@@ -23,6 +23,7 @@ Long-term ambitions include:
 - Connecting to ideas in **origins-of-life** and **artificial life (ALife)** research.
 
 ## 🌐 Technologies
+
 - **TypeScript** — core language.
 - **Vite** — development bundler and dev server.
 - **HTML5 Canvas** — real-time visualisation.
@@ -36,3 +37,17 @@ Long-term ambitions include:
 | **v0.3** ✅ | Energy system   | Introduce energy absorption and release for reactions. |
 | **v0.4** | Replication     | Allow molecules to replicate under certain conditions. |
 | **v1.0** | Autocatalysis   | Model self-sustaining reaction networks. |
+
+## 🧬 Glossary of AChem & Chemistry Terms
+This section explains key terms from artificial chemistry (AChem) and chemistry as used in this project:
+
+- **Artificial Chemistry (AChem):** A computational framework for simulating chemical-like systems using abstract rules and symbolic molecules, often to study emergent or life-like behaviors.
+- **Molecule:** In this simulation, a symbolic entity (e.g. "A", "B", "AB") that can move, collide, and react with others.
+- **Particle:** The physical representation of a molecule in 2D space, with position and velocity.
+- **Reaction:** A rule-based transformation where two molecules interact to form a new molecule, possibly absorbing or releasing energy.
+- **Energy:** A numerical property assigned to molecules, used to determine if reactions can occur and to simulate thermodynamic effects (e.g. energy absorption or release).
+- **Endothermic Reaction:** A reaction that requires energy input (energy is absorbed; only occurs if enough energy is available).
+- **Exothermic Reaction:** A reaction that releases energy (energy is produced and added to the resulting molecule).
+- **Autocatalysis:** A process where a molecule or set of molecules catalyzes its own production, leading to self-sustaining reaction networks.
+- **Emergence:** The appearance of complex behaviors or patterns from simple rules and interactions.
+- **Self-replication:** The ability of a molecule or structure to produce copies of itself, a key property in origins-of-life research.
