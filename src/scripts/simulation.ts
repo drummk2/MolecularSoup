@@ -8,6 +8,7 @@ interface ReactionRing {
     radius: number;
     maxRadius: number;
     alpha: number;
+    active: boolean;
 }
 
 /* Manages the simulation of particles and molecules. */
@@ -30,6 +31,15 @@ export class Simulation {
     /* Active reaction rings in the simulation. */
     reactionRings: ReactionRing[] = [];
 
+    /* Pool of reusable reaction rings. */
+    ringPool: ReactionRing[] = [];
+
+    /* Grid for spatial partitioning (collision optimisation). */
+    grid: Map<string, number[]> = new Map();
+
+    /* Grid cell size. */
+    cellSize = 50;
+
     /* Initialise the simulation with a canvas context and dimensions. */
     constructor(ctx: CanvasRenderingContext2D, width: number, height: number) {
         this.ctx = ctx;
@@ -43,45 +53,69 @@ export class Simulation {
         this.molecules.push(m);
     }
 
+    /* Get grid cell key for coordinates. */
+    private getCellKey(x: number, y: number): string {
+        const col = Math.floor(x / this.cellSize);
+        const row = Math.floor(y / this.cellSize);
+        return `${col},${row}`;
+    }
+
     /* Update all particles by moving them, handling collisions, and boundary bounces. */
     update(): void {
+        this.grid.clear();
+
         /* Move and bounce particles. */
-        this.particles.forEach(p => {
+        this.particles.forEach((p, i) => {
             p.move();
             p.bounce(this.width, this.height);
+
+            /* Assign particle to grid cell. */
+            const key = this.getCellKey(p.x, p.y);
+            if (!this.grid.has(key)) this.grid.set(key, []);
+            this.grid.get(key)!.push(i);
         });
 
-        /* Check collisions between particles and apply reactions. */
-        for (let i = 0; i < this.particles.length; i++) {
-            for (let j = i + 1; j < this.particles.length; j++) {
-                const dx = this.particles[i].x - this.particles[j].x;
-                const dy = this.particles[i].y - this.particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+        const radiusSq = 24 * 24;
 
-                /* Collision radius of 24. */
-                if (distance < 24) {
-                    const reactionResult = this.molecules[i].react(this.molecules[j]);
-                    if (reactionResult) {
-                        /* Replace first molecule with reaction result and flash. */
-                        this.molecules[i] = reactionResult;
+        /* Check collisions within grid cells. */
+        this.grid.forEach(indices => {
+            for (let i = 0; i < indices.length; i++) {
+                for (let j = i + 1; j < indices.length; j++) {
+                    const idx1 = indices[i];
+                    const idx2 = indices[j];
 
-                        /* Add a reaction ring effect at this location. */
-                        this.reactionRings.push({
-                            x: this.particles[i].x,
-                            y: this.particles[i].y,
-                            radius: 12,
-                            maxRadius: 30,
-                            alpha: 0.6
-                        });
+                    const dx = this.particles[idx1].x - this.particles[idx2].x;
+                    const dy = this.particles[idx1].y - this.particles[idx2].y;
+                    const distSq = dx * dx + dy * dy;
 
-                        /* Remove the second particle/molecule. */
-                        this.particles.splice(j, 1);
-                        this.molecules.splice(j, 1);
-                        j--; /* Adjust index after removal. */
+                    if (distSq < radiusSq) {
+                        const reactionResult = this.molecules[idx1].react(this.molecules[idx2]);
+                        if (reactionResult) {
+                            this.molecules[idx1] = reactionResult;
+
+                            /* Get a ring from pool or create new. */
+                            let ring = this.ringPool.find(r => !r.active);
+                            if (!ring) {
+                                ring = { x: 0, y: 0, radius: 12, maxRadius: 30, alpha: 0.6, active: true };
+                                this.ringPool.push(ring);
+                            }
+                            ring.x = this.particles[idx1].x;
+                            ring.y = this.particles[idx1].y;
+                            ring.radius = 12;
+                            ring.alpha = 0.6;
+                            ring.active = true;
+                            this.reactionRings.push(ring);
+
+                            /* Remove the second particle/molecule. */
+                            this.particles.splice(idx2, 1);
+                            this.molecules.splice(idx2, 1);
+                            indices.splice(j, 1);
+                            j--;
+                        }
                     }
                 }
             }
-        }
+        });
     }
 
     /* Draw all molecules as colored circles with letters and reaction flash/rings. */
@@ -90,21 +124,25 @@ export class Simulation {
 
         /* Draw reaction rings. */
         this.reactionRings.forEach((ring, index) => {
+            if (!ring.active) return;
+
             this.ctx.beginPath();
             this.ctx.arc(ring.x, ring.y, ring.radius, 0, 2 * Math.PI);
             this.ctx.strokeStyle = `rgba(255, 255, 0, ${ring.alpha})`;
             this.ctx.lineWidth = 2;
             this.ctx.stroke();
 
-            /* Update ring properties. */
             ring.radius += 1.5;
             ring.alpha -= 0.03;
 
-            /* Remove ring if fully faded. */
-            if (ring.alpha <= 0) {
-                this.reactionRings.splice(index, 1);
-            }
+            if (ring.alpha <= 0) ring.active = false;
         });
+
+        /* Pre-set font and lineWidth for all particles. */
+        this.ctx.lineWidth = 2;
+        this.ctx.font = '10px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
 
         /* Draw particles. */
         this.particles.forEach((p, i) => {
@@ -125,9 +163,6 @@ export class Simulation {
 
             /* Draw molecule letter on top. */
             this.ctx.fillStyle = 'black';
-            this.ctx.font = '10px Arial';
-            this.ctx.textAlign = 'center';
-            this.ctx.textBaseline = 'middle';
             this.ctx.fillText(m.structure, p.x, p.y);
         });
     }
