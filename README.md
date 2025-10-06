@@ -4,6 +4,8 @@
 
 This project simulates a "digital soup" of abstract molecules that move, collide, and eventually react — serving as a foundation for studying emergence, self-replication, and autocatalysis.
 
+If you'd like to see a running version, just click [here](https://drummk2.github.io/MolecularSoup/)!
+
 ## 🧩 Overview
 
 In **MolecularSoup**, each molecule is represented as a symbolic structure (e.g. `"A"`, `"B"`, `"AB"`) moving through a virtual environment. Over time, molecules:
