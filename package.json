@@ -1,0 +1,17 @@
+{
+  "name": "molecularsoup",
+  "version": "1.0.0",
+  "description": "**MolecularSoup** is a browser-based simulation written in **TypeScript** that explores the fundamentals of **artificial chemistry (AChem)** — a field concerned with how life-like and self-organising behaviors can emerge from simple, rule-based interactions.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.1.9"
+  }
+}
