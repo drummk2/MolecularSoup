@@ -7,9 +7,9 @@ This project simulates a "digital soup" of abstract molecules that move, collide
 ## 🧩 Overview
 
 In **MolecularSoup**, each molecule is represented as a symbolic structure (e.g. `"A"`, `"B"`, `"AB"`) moving through a virtual environment. Over time, molecules:
-- Move randomly in 2D space  
-- Bounce off boundaries and one another  
-- (In later versions) React and form new compounds  
+- Move randomly in 2D space.
+- Bounce off boundaries and one another.
+- (In later versions) React and form new compounds.
 
 The simulation visualises this process using the HTML5 `<canvas>` element, allowing an intuitive, interactive way to observe the evolution of simple artificial chemical systems.
 
@@ -17,7 +17,7 @@ The simulation visualises this process using the HTML5 `<canvas>` element, allow
 
 The goal of MolecularSoup is to create a minimal, extensible framework for **exploring emergent behavior** in artificial systems.  
 Long-term ambitions include:
-- Modeling **autocatalytic networks**  
-- Simulating **energy flow** and **reaction thermodynamics**  
-- Investigating **self-replicating molecules**  
-- Connecting to ideas in **origins-of-life** and **artificial life (ALife)** research  
+- Modeling **autocatalytic networks**.
+- Simulating **energy flow** and **reaction thermodynamics**.
+- Investigating **self-replicating molecules**.
+- Connecting to ideas in **origins-of-life** and **artificial life (ALife)** research.
