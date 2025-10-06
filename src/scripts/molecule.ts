@@ -1,5 +1,17 @@
 /* Represents a molecule in the simulation with a symbolic structure and colour. */
 export class Molecule {
+    /* Autocatalytic network rules. Each entry: product, reactants, catalyst, energy cost, probability. */
+    static autocatalyticRules: Array<{
+        product: string;
+        reactants: [string, string];
+        catalyst: string;
+        energyCost: number;
+        probability: number;
+    }> = [
+        { product: 'AB', reactants: ['A', 'B'], catalyst: 'BC', energyCost: 10, probability: 0.15 },
+        { product: 'BC', reactants: ['B', 'C'], catalyst: 'AB', energyCost: 10, probability: 0.15 },
+    ];
+
     /* Symbolic structure of the molecule, e.g., "A", "B", "AB". */
     structure: string;
 
@@ -78,7 +90,36 @@ export class Molecule {
         return null;
     }
 
-    /* Static method to check if three molecules can replicate via template-based mechanism. Returns the new molecule if successful, or null. */
+    /* Static method to check if three molecules can undergo an autocatalytic reaction.
+       Returns the new molecule if successful, or null. */
+    static tryAutocatalysis(m1: Molecule, m2: Molecule, m3: Molecule): Molecule | null {
+        const types = [m1.structure, m2.structure, m3.structure];
+        for (const rule of Molecule.autocatalyticRules) {
+            /* Check if all required types are present. */
+            if (
+                types.includes(rule.reactants[0]) &&
+                types.includes(rule.reactants[1]) &&
+                types.includes(rule.catalyst)
+            ) {
+                /* Find the catalyst molecule. */
+                const catalystMol = [m1, m2, m3].find((m) => m.structure === rule.catalyst)!;
+                if (catalystMol.energy < rule.energyCost) continue;
+                if (Math.random() > rule.probability) continue;
+
+                /* Subtract energy from catalyst. */
+                catalystMol.energy -= rule.energyCost;
+
+                /* Create the product molecule. */
+                const newMol = new Molecule(rule.product, Molecule.palette[rule.product], 10);
+                newMol.reacting = 5;
+                return newMol;
+            }
+        }
+        return null;
+    }
+
+    /* Static method to check if three molecules can replicate via template-based mechanism.
+       Returns the new molecule if successful, or null. */
     static tryReplicate(
         template: Molecule,
         m1: Molecule,

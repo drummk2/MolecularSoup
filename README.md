@@ -36,7 +36,7 @@ Long-term ambitions include:
 | **v0.2** ✅ | Reactions       | Implement symbolic reaction rules (e.g., A + B → AB). |
 | **v0.3** ✅ | Energy system   | Introduce energy absorption and release for reactions. |
 | **v0.4** ✅ | Replication     | Allow molecules to replicate under certain conditions. |
-| **v1.0** | Autocatalysis   | Model self-sustaining reaction networks. |
+| **v0.5** ✅ | Autocatalysis   | Model self-sustaining reaction networks. |
 
 ## 🧬 Glossary of AChem & Chemistry Terms
 This section explains key terms from artificial chemistry (AChem) and chemistry as used in this project:

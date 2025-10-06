@@ -79,41 +79,42 @@ export class Simulation {
 
         /* Check collisions and template-based replication within grid cells. */
         this.grid.forEach((indices) => {
-            /* First, check for three-body template-based replication. */
+            /* First, check for three-body autocatalytic reactions. */
             for (let i = 0; i < indices.length; i++) {
                 for (let j = 0; j < indices.length; j++) {
                     for (let k = 0; k < indices.length; k++) {
                         if (i !== j && i !== k && j < k) {
-                            const idxT = indices[i];
-                            const idxM1 = indices[j];
-                            const idxM2 = indices[k];
-                            const t = this.molecules[idxT];
-                            const m1 = this.molecules[idxM1];
-                            const m2 = this.molecules[idxM2];
-                            const pT = this.particles[idxT];
-                            const pM1 = this.particles[idxM1];
-                            const pM2 = this.particles[idxM2];
+                            const idx1 = indices[i];
+                            const idx2 = indices[j];
+                            const idx3 = indices[k];
+                            const m1 = this.molecules[idx1];
+                            const m2 = this.molecules[idx2];
+                            const m3 = this.molecules[idx3];
+                            const p1 = this.particles[idx1];
+                            const p2 = this.particles[idx2];
+                            const p3 = this.particles[idx3];
 
                             /* All must be close enough. */
-                            const d1 = (pT.x - pM1.x) ** 2 + (pT.y - pM1.y) ** 2;
-                            const d2 = (pT.x - pM2.x) ** 2 + (pT.y - pM2.y) ** 2;
-
-                            if (d1 < radiusSq && d2 < radiusSq) {
-                                /* Try to replicate. */
-                                const newMol = Molecule.tryReplicate(t, m1, m2, 10, 0.1);
-
+                            const d12 = (p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2;
+                            const d13 = (p1.x - p3.x) ** 2 + (p1.y - p3.y) ** 2;
+                            const d23 = (p2.x - p3.x) ** 2 + (p2.y - p3.y) ** 2;
+                            if (d12 < radiusSq && d13 < radiusSq && d23 < radiusSq) {
+                                /* Try autocatalytic reaction. */
+                                const newMol = Molecule.tryAutocatalysis(m1, m2, m3);
                                 if (newMol) {
-                                    /* Place new molecule at template's position. */
+                                    /* Place new molecule at the average position. */
+                                    const avgX = (p1.x + p2.x + p3.x) / 3;
+                                    const avgY = (p1.y + p2.y + p3.y) / 3;
                                     const newParticle = new Particle(
-                                        pT.x,
-                                        pT.y,
+                                        avgX,
+                                        avgY,
                                         Math.random() * 2 - 1,
                                         Math.random() * 2 - 1
                                     );
                                     this.particles.push(newParticle);
                                     this.molecules.push(newMol);
 
-                                    /* Visualise replication with a ring. */
+                                    /* Visualise autocatalysis with a ring. */
                                     let ring = this.ringPool.find((r) => !r.active);
                                     if (!ring) {
                                         ring = {
@@ -126,9 +127,8 @@ export class Simulation {
                                         };
                                         this.ringPool.push(ring);
                                     }
-
-                                    ring.x = pT.x;
-                                    ring.y = pT.y;
+                                    ring.x = avgX;
+                                    ring.y = avgY;
                                     ring.radius = 12;
                                     ring.alpha = 0.6;
                                     ring.active = true;
