@@ -6,10 +6,14 @@ export class Molecule {
     /* Display color of the molecule. */
     color: string;
 
+    /* Number of frames left to flash when reacting. */
+    reacting?: number;
+
     /* Initialise the molecule with a structure and color. */
     constructor(structure: string, color: string) {
         this.structure = structure;
         this.color = color;
+        this.reacting = 0;
     }
 
     /* Predefined color palette for molecule types. */
@@ -38,7 +42,9 @@ export class Molecule {
     react(other: Molecule): Molecule | null {
         const resultType = Molecule.reactions[this.structure]?.[other.structure];
         if (resultType) {
-            return new Molecule(resultType, Molecule.palette[resultType]);
+            const newMolecule = new Molecule(resultType, Molecule.palette[resultType]);
+            newMolecule.reacting = 5; /* Flash for 5 frames. */
+            return newMolecule;
         }
         return null;
     }
