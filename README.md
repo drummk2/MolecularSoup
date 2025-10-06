@@ -1,4 +1,4 @@
-# 🧪 MolecularSoup
+# MolecularSoup
 
 **MolecularSoup** is a browser-based simulation written in **TypeScript** that explores the fundamentals of **artificial chemistry (AChem)** — a field concerned with how life-like and self-organising behaviours can emerge from simple, rule-based interactions.
 
@@ -6,7 +6,7 @@ This project simulates a "digital soup" of abstract molecules that move, collide
 
 If you'd like to see a running version, just click [here](https://drummk2.github.io/MolecularSoup/)!
 
-## 🧩 Overview
+## Overview
 
 In **MolecularSoup**, each molecule is represented as a symbolic structure (e.g. `"A"`, `"B"`, `"AB"`) moving through a virtual environment. Over time, molecules:
 - Move randomly in 2D space.
@@ -15,7 +15,7 @@ In **MolecularSoup**, each molecule is represented as a symbolic structure (e.g.
 
 The simulation visualises this process using the HTML5 `<canvas>` element, allowing an intuitive, interactive way to observe the evolution of simple artificial chemical systems.
 
-## 🧠 Motivation
+## Motivation
 
 The goal of MolecularSoup is to create a minimal, extensible framework for **exploring emergent behaviour** in artificial systems.  
 Long-term ambitions include:
@@ -24,13 +24,13 @@ Long-term ambitions include:
 - Investigating **self-replicating molecules**.
 - Connecting to ideas in **origins-of-life** and **artificial life (ALife)** research.
 
-## 🌐 Technologies
+## Technologies
 
 - **TypeScript** — core language.
 - **Vite** — development bundler and dev server.
 - **HTML5 Canvas** — real-time visualisation.
 
-## 🚀 Roadmap
+## Roadmap
 
 | Version  | Feature          | Description |
 |----------|-----------------|-------------|
@@ -41,7 +41,7 @@ Long-term ambitions include:
 | **v0.5** ✅ | Autocatalysis   | Model self-sustaining reaction networks. |
 | **v0.6** | TBD   | TBD |
 
-## 🧬 Glossary of AChem & Chemistry Terms
+## Glossary of AChem & Chemistry Terms
 This section explains key terms from artificial chemistry (AChem) and chemistry as used in this project:
 
 - **Artificial Chemistry (AChem):** A computational framework for simulating chemical-like systems using abstract rules and symbolic molecules, often to study emergent or life-like behaviors.
