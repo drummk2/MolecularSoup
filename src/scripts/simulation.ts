@@ -77,8 +77,70 @@ export class Simulation {
 
         const radiusSq = 24 * 24;
 
-        /* Check collisions within grid cells. */
+        /* Check collisions and template-based replication within grid cells. */
         this.grid.forEach((indices) => {
+            /* First, check for three-body template-based replication. */
+            for (let i = 0; i < indices.length; i++) {
+                for (let j = 0; j < indices.length; j++) {
+                    for (let k = 0; k < indices.length; k++) {
+                        if (i !== j && i !== k && j < k) {
+                            const idxT = indices[i];
+                            const idxM1 = indices[j];
+                            const idxM2 = indices[k];
+                            const t = this.molecules[idxT];
+                            const m1 = this.molecules[idxM1];
+                            const m2 = this.molecules[idxM2];
+                            const pT = this.particles[idxT];
+                            const pM1 = this.particles[idxM1];
+                            const pM2 = this.particles[idxM2];
+
+                            /* All must be close enough. */
+                            const d1 = (pT.x - pM1.x) ** 2 + (pT.y - pM1.y) ** 2;
+                            const d2 = (pT.x - pM2.x) ** 2 + (pT.y - pM2.y) ** 2;
+
+                            if (d1 < radiusSq && d2 < radiusSq) {
+                                /* Try to replicate. */
+                                const newMol = Molecule.tryReplicate(t, m1, m2, 10, 0.1);
+
+                                if (newMol) {
+                                    /* Place new molecule at template's position. */
+                                    const newParticle = new Particle(
+                                        pT.x,
+                                        pT.y,
+                                        Math.random() * 2 - 1,
+                                        Math.random() * 2 - 1
+                                    );
+                                    this.particles.push(newParticle);
+                                    this.molecules.push(newMol);
+
+                                    /* Visualise replication with a ring. */
+                                    let ring = this.ringPool.find((r) => !r.active);
+                                    if (!ring) {
+                                        ring = {
+                                            x: 0,
+                                            y: 0,
+                                            radius: 12,
+                                            maxRadius: 30,
+                                            alpha: 0.6,
+                                            active: true,
+                                        };
+                                        this.ringPool.push(ring);
+                                    }
+
+                                    ring.x = pT.x;
+                                    ring.y = pT.y;
+                                    ring.radius = 12;
+                                    ring.alpha = 0.6;
+                                    ring.active = true;
+                                    this.reactionRings.push(ring);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* Then, check for pairwise collisions and reactions as before. */
             for (let i = 0; i < indices.length; i++) {
                 for (let j = i + 1; j < indices.length; j++) {
                     const idx1 = indices[i];

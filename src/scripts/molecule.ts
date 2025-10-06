@@ -34,19 +34,28 @@ export class Molecule {
         const types = Object.keys(Molecule.palette);
         const t = types[Math.floor(Math.random() * types.length)];
 
-        // Assign a default energy value (could be random or type-based)
+        /* Assign a default energy value (could be random or type-based). */
         return new Molecule(t, Molecule.palette[t], 10);
     }
 
     /* Reaction rules for molecule collisions, with energy changes (deltaE). */
     static reactions: Record<string, Record<string, { result: string; deltaE: number }>> = {
-        A: { B: { result: 'AB', deltaE: -5 } }, // A + B -> AB, releases 5 energy
-        B: { C: { result: 'BC', deltaE: 8 } }, // B + C -> BC, absorbs 8 energy
+        A: { B: { result: 'AB', deltaE: -5 } } /* A + B -> AB, releases 5 energy. */,
+        B: { C: { result: 'BC', deltaE: 8 } } /* B + C -> BC, absorbs 8 energy. */,
     };
 
-    /* Check if this molecule reacts with another and return the resulting molecule.
-       Handles energy transfer. Endothermic reactions (deltaE > 0) require enough
-       combined energy to proceed. */
+    /* Check if this molecule can act as a template for replication. Only composite
+       molecules (length > 1) can replicate. */
+    isTemplate(): boolean {
+        return this.structure.length > 1;
+    }
+
+    /* Get the required monomers for this template (e.g., 'AB' -> ['A', 'B']). */
+    getMonomers(): string[] {
+        return this.structure.split('');
+    }
+
+    /* Check if this molecule reacts with another and return the resulting molecule. Handles energy transfer. Endothermic reactions (deltaE > 0) require enough combined energy to proceed. */
     react(other: Molecule): Molecule | null {
         const reaction = Molecule.reactions[this.structure]?.[other.structure];
         if (reaction) {
@@ -67,5 +76,36 @@ export class Molecule {
         }
 
         return null;
+    }
+
+    /* Static method to check if three molecules can replicate via template-based mechanism. Returns the new molecule if successful, or null. */
+    static tryReplicate(
+        template: Molecule,
+        m1: Molecule,
+        m2: Molecule,
+        energyCost: number,
+        probability: number = 0.1
+    ): Molecule | null {
+        /* Only composite molecules can be templates. */
+        if (!template.isTemplate()) return null;
+
+        const monomers = template.getMonomers();
+        const types = [m1.structure, m2.structure];
+        /* Check if both required monomers are present (order-insensitive). */
+        if (!monomers.every((m) => types.includes(m))) return null;
+
+        /* Require enough energy for replication. */
+        if (template.energy < energyCost) return null;
+
+        /* Replication is probabilistic. */
+        if (Math.random() > probability) return null;
+
+        /* Subtract energy cost from template. */
+        template.energy -= energyCost;
+
+        /* Create a new molecule of the same type, with default energy. */
+        const newMol = new Molecule(template.structure, template.colour, 10);
+        newMol.reacting = 5;
+        return newMol;
     }
 }
