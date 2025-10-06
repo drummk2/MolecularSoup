@@ -11,7 +11,7 @@ If you'd like to see a running version, just click [here](https://drummk2.github
 In **MolecularSoup**, each molecule is represented as a symbolic structure (e.g. `"A"`, `"B"`, `"AB"`) moving through a virtual environment. Over time, molecules:
 - Move randomly in 2D space.
 - Bounce off boundaries and one another.
-- (In later versions) React and form new compounds.
+- React and form new compounds.
 
 The simulation visualises this process using the HTML5 `<canvas>` element, allowing an intuitive, interactive way to observe the evolution of simple artificial chemical systems.
 
