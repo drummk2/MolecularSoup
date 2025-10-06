@@ -78,7 +78,7 @@ export class Simulation {
         const radiusSq = 24 * 24;
 
         /* Check collisions within grid cells. */
-        this.grid.forEach(indices => {
+        this.grid.forEach((indices) => {
             for (let i = 0; i < indices.length; i++) {
                 for (let j = i + 1; j < indices.length; j++) {
                     const idx1 = indices[i];
@@ -94,9 +94,16 @@ export class Simulation {
                             this.molecules[idx1] = reactionResult;
 
                             /* Get a ring from pool or create new. */
-                            let ring = this.ringPool.find(r => !r.active);
+                            let ring = this.ringPool.find((r) => !r.active);
                             if (!ring) {
-                                ring = { x: 0, y: 0, radius: 12, maxRadius: 30, alpha: 0.6, active: true };
+                                ring = {
+                                    x: 0,
+                                    y: 0,
+                                    radius: 12,
+                                    maxRadius: 30,
+                                    alpha: 0.6,
+                                    active: true,
+                                };
                                 this.ringPool.push(ring);
                             }
                             ring.x = this.particles[idx1].x;
