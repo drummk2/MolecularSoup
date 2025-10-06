@@ -3,13 +3,36 @@ export class Molecule {
     /* Autocatalytic network rules. Each entry: product, reactants, catalyst, energy cost, probability. */
     static autocatalyticRules: Array<{
         product: string;
-        reactants: [string, string];
+        reactants: string[];
         catalyst: string;
         energyCost: number;
         probability: number;
     }> = [
         { product: 'AB', reactants: ['A', 'B'], catalyst: 'BC', energyCost: 10, probability: 0.15 },
         { product: 'BC', reactants: ['B', 'C'], catalyst: 'AB', energyCost: 10, probability: 0.15 },
+        { product: 'CD', reactants: ['C', 'D'], catalyst: 'DE', energyCost: 12, probability: 0.13 },
+        { product: 'DE', reactants: ['D', 'E'], catalyst: 'CD', energyCost: 12, probability: 0.13 },
+        {
+            product: 'ABC',
+            reactants: ['AB', 'C'],
+            catalyst: 'BCD',
+            energyCost: 15,
+            probability: 0.1,
+        },
+        {
+            product: 'BCD',
+            reactants: ['BC', 'D'],
+            catalyst: 'ABC',
+            energyCost: 15,
+            probability: 0.1,
+        },
+        {
+            product: 'CDE',
+            reactants: ['CD', 'E'],
+            catalyst: 'BCD',
+            energyCost: 15,
+            probability: 0.1,
+        },
     ];
 
     /* Symbolic structure of the molecule, e.g., "A", "B", "AB". */
@@ -37,8 +60,20 @@ export class Molecule {
         A: '#e63946',
         B: '#457b9d',
         C: '#2a9d8f',
+        D: '#8d99ae',
+        E: '#f72585',
         AB: '#f4a261',
+        AC: '#f7b267',
+        AD: '#f4845f',
         BC: '#e9c46a',
+        BD: '#b5ead7',
+        BE: '#9d4edd',
+        CD: '#b5179e',
+        CE: '#43bccd',
+        DE: '#7209b7',
+        ABC: '#a3c9a8',
+        BCD: '#f6bd60',
+        CDE: '#43aa8b',
     };
 
     /* Generate a random molecule from the palette. */
@@ -52,8 +87,20 @@ export class Molecule {
 
     /* Reaction rules for molecule collisions, with energy changes (deltaE). */
     static reactions: Record<string, Record<string, { result: string; deltaE: number }>> = {
-        A: { B: { result: 'AB', deltaE: -5 } } /* A + B -> AB, releases 5 energy. */,
-        B: { C: { result: 'BC', deltaE: 8 } } /* B + C -> BC, absorbs 8 energy. */,
+        A: {
+            B: { result: 'AB', deltaE: -5 },
+            C: { result: 'AC', deltaE: -4 },
+            D: { result: 'AD', deltaE: -3 },
+        },
+        B: {
+            C: { result: 'BC', deltaE: 8 },
+            D: { result: 'BD', deltaE: -2 },
+            E: { result: 'BE', deltaE: -2 },
+        },
+        C: { D: { result: 'CD', deltaE: 6 }, E: { result: 'CE', deltaE: -1 } },
+        AB: { C: { result: 'ABC', deltaE: 10 } },
+        BC: { D: { result: 'BCD', deltaE: 12 } },
+        CD: { E: { result: 'CDE', deltaE: 14 } }
     };
 
     /* Check if this molecule can act as a template for replication. Only composite
@@ -95,12 +142,7 @@ export class Molecule {
     static tryAutocatalysis(m1: Molecule, m2: Molecule, m3: Molecule): Molecule | null {
         const types = [m1.structure, m2.structure, m3.structure];
         for (const rule of Molecule.autocatalyticRules) {
-            /* Check if all required types are present. */
-            if (
-                types.includes(rule.reactants[0]) &&
-                types.includes(rule.reactants[1]) &&
-                types.includes(rule.catalyst)
-            ) {
+            if (rule.reactants.every((r) => types.includes(r)) && types.includes(rule.catalyst)) {
                 /* Find the catalyst molecule. */
                 const catalystMol = [m1, m2, m3].find((m) => m.structure === rule.catalyst)!;
                 if (catalystMol.energy < rule.energyCost) continue;
@@ -108,7 +150,7 @@ export class Molecule {
 
                 /* Subtract energy from catalyst. */
                 catalystMol.energy -= rule.energyCost;
-
+                
                 /* Create the product molecule. */
                 const newMol = new Molecule(rule.product, Molecule.palette[rule.product], 10);
                 newMol.reacting = 5;
