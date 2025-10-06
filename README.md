@@ -21,3 +21,9 @@ Long-term ambitions include:
 - Simulating **energy flow** and **reaction thermodynamics**.
 - Investigating **self-replicating molecules**.
 - Connecting to ideas in **origins-of-life** and **artificial life (ALife)** research.
+
+## 🌐 Technologies
+- **TypeScript** — core language.
+- **Vite** — development bundler and dev server.
+- **HTML5 Canvas** — real-time visualization.
+
