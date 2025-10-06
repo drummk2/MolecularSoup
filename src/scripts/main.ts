@@ -55,6 +55,8 @@ const startBtn = document.getElementById('startPause') as HTMLButtonElement;
 let running = false;
 startBtn.addEventListener('click', () => {
     if (!running) {
+        /* Always re-initialise particles with the current count before starting. */
+        initParticles(parseInt(countInput.value));
         animate();
         startBtn.textContent = 'Pause';
     } else {

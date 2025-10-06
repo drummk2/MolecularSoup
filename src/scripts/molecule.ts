@@ -100,7 +100,7 @@ export class Molecule {
         C: { D: { result: 'CD', deltaE: 6 }, E: { result: 'CE', deltaE: -1 } },
         AB: { C: { result: 'ABC', deltaE: 10 } },
         BC: { D: { result: 'BCD', deltaE: 12 } },
-        CD: { E: { result: 'CDE', deltaE: 14 } }
+        CD: { E: { result: 'CDE', deltaE: 14 } },
     };
 
     /* Check if this molecule can act as a template for replication. Only composite
@@ -150,7 +150,7 @@ export class Molecule {
 
                 /* Subtract energy from catalyst. */
                 catalystMol.energy -= rule.energyCost;
-                
+
                 /* Create the product molecule. */
                 const newMol = new Molecule(rule.product, Molecule.palette[rule.product], 10);
                 newMol.reacting = 5;
