@@ -125,7 +125,7 @@ export class Simulation {
         });
     }
 
-    /* Draw all molecules as colored circles with letters and reaction flash/rings. */
+    /* Draw all molecules as coloured circles with letters and reaction flash/rings. */
     draw(): void {
         this.ctx.clearRect(0, 0, this.width, this.height);
 
@@ -160,7 +160,7 @@ export class Simulation {
                 this.ctx.fillStyle = 'white';
                 m.reacting--;
             } else {
-                this.ctx.fillStyle = m.color;
+                this.ctx.fillStyle = m.colour;
             }
 
             /* Draw circle. */

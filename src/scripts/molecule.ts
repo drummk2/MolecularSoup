@@ -1,22 +1,22 @@
-/* Represents a molecule in the simulation with a symbolic structure and color. */
+/* Represents a molecule in the simulation with a symbolic structure and colour. */
 export class Molecule {
     /* Symbolic structure of the molecule, e.g., "A", "B", "AB". */
     structure: string;
 
-    /* Display color of the molecule. */
-    color: string;
+    /* Display colour of the molecule. */
+    colour: string;
 
     /* Number of frames left to flash when reacting. */
     reacting?: number;
 
-    /* Initialise the molecule with a structure and color. */
-    constructor(structure: string, color: string) {
+    /* Initialise the molecule with a structure and colour. */
+    constructor(structure: string, colour: string) {
         this.structure = structure;
-        this.color = color;
+        this.colour = colour;
         this.reacting = 0;
     }
 
-    /* Predefined color palette for molecule types. */
+    /* Predefined colour palette for molecule types. */
     static palette: Record<string, string> = {
         A: '#e63946',
         B: '#457b9d',
